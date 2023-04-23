@@ -15,6 +15,8 @@ logging.basicConfig(
   encoding='utf-8', 
   datefmt='%Y-%m-%d %H:%M:%S')
 
+year = '2022'
+
 reports = {
    'depth_charts': f'https://github.com/nflverse/nflverse-data/releases/download/depth_charts/depth_charts_{year}.parquet',
    'injuries': f'https://github.com/nflverse/nflverse-data/releases/download/injuries/injuries_{year}.parquet',
@@ -39,7 +41,13 @@ db.sql("INSTALL httpfs")
 # Check to see if the data is available, if not, log it
 def get_report(report_name, file_url):
     try:
-        db.sql(f"SELECT * FROM read_parquet('{file_url}') LIMIT 1")
+        db.sql(
+            f"""
+            CREATE OR REPLACE TABLE source_{report_name} AS
+            SELECT *
+            FROM read_parquet('{file_url}') LIMIT 1
+            """
+        )
     except duckdb.IOException as fileErr:
         logging.error(f'Error querying {report_name}: {fileErr}')
 
