@@ -1,11 +1,13 @@
-import requests
+
+from dotenv import load_dotenv
+import duckdb
 import logging
 import os
-from dotenv import load_dotenv
 
 load_dotenv()
 
-project_root = os.getenv('PROJECT_ROOT')
+# replace with the filepath to your db (dbname.db)
+db_directory = os.getenv('DB_DIR')
 
 logging.basicConfig(
   format='%(asctime)s %(levelname)-8s %(message)s',
@@ -14,40 +16,35 @@ logging.basicConfig(
   datefmt='%Y-%m-%d %H:%M:%S')
 
 reports = {
-   'depth_charts': 'depth_charts',
-   'injuries': 'injuries',
-   'depth_charts': 'depth_charts',
-   'ngs_receiving': 'nextgen_stats',
-   'ngs_rushing': 'nextgen_stats',
-   'play_by_play': 'pbp',
-   'ngs_rushing': 'nextgen_stats',
-   'player_stats': 'player_stats',
-   'roster': 'rosters',
-   'snap_counts': 'snap_counts',
-   'officials': 'officials',
-   'pbp_participation': 'pbp_participation',
-   'players': 'players',
-   'roster_weekly': 'weekly_rosters',
+   'depth_charts': f'https://github.com/nflverse/nflverse-data/releases/download/depth_charts/depth_charts_{year}.parquet',
+   'injuries': f'https://github.com/nflverse/nflverse-data/releases/download/injuries/injuries_{year}.parquet',
+   'ngs_receiving': f'https://github.com/nflverse/nflverse-data/releases/download/nextgen_stats/ngs_receiving.parquet',
+   'ngs_rushing': f'https://github.com/nflverse/nflverse-data/releases/download/nextgen_stats/ngs_rushing.parquet',
+   'ngs_passing': f'https://github.com/nflverse/nflverse-data/releases/download/nextgen_stats/ngs_receiving.parquet',
+   'play_by_play': f'https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_{year}.parquet',
+   'player_stats': f'https://github.com/nflverse/nflverse-data/releases/download/player_stats/player_stats_{year}.parquet',
+   'roster': f'https://github.com/nflverse/nflverse-data/releases/download/rosters/roster_{year}.parquet',
+   'snap_counts': f'https://github.com/nflverse/nflverse-data/releases/download/snap_counts/snap_counts_{year}.parquet',
+   'officials': f'https://github.com/nflverse/nflverse-data/releases/download/officials/officials.parquet',
+   'pbp_participation': f'https://github.com/nflverse/nflverse-data/releases/download/pbp_participation/pbp_participation_{year}.parquet',
+   'players': f'https://github.com/nflverse/nflverse-data/releases/download/players/players.parquet',
+   'roster_weekly': f'https://github.com/nflverse/nflverse-data/releases/download/weekly_rosters/roster_weekly_{year}.parquet'
 }
 
+db = duckdb.connect(f'{db_directory}/nfldata.db')
 
-def getReport(subdirectory, report_name, year = '2022'):
+# Only need to run this once
+db.sql("INSTALL httpfs")
 
-  file_url = f'https://github.com/nflverse/nflverse-data/releases/download/{subdirectory}/{report_name}_{year}.csv'
-  try:
-    r = requests.get(file_url)
-  except requests.exceptions.ConnectionError as connErr:
-    logging.error(f'Connection error: {connErr}')
-  except requests.exceptions.HTTPError as httpErr:
-    logging.error(f'Http error: {httpErr}')
-  
-  try:
-    with open(f'{project_root}/data/{report_name}_{year}.csv', 'wb') as file:
-      file.write(r.content)
-  except IOError as fileErr:
-    logging.error(f'Error writing file: {fileErr}')
+# Check to see if the data is available, if not, log it
+def get_report(report_name, file_url):
+    try:
+        db.sql(f"SELECT * FROM read_parquet('{file_url}') LIMIT 1")
+    except duckdb.IOException as fileErr:
+        logging.error(f'Error querying {report_name}: {fileErr}')
 
 
-for subdirectory, report_name in reports.items():
-   getReport(subdirectory, report_name)
+for file_url, report_name in reports.items():
+    # print(file_url, report_name)
+    get_report(file_url, report_name)
 
