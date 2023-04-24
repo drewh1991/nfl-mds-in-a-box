@@ -1,0 +1,19 @@
+version: 2
+
+sources:
+  - name: nfldata
+    database: nfldata
+    tables:
+      - name: source_depth_charts
+      - name: source_injuries
+      - name: source_ngs_receiving
+      - name: source_ngs_rushing
+      - name: source_ngs_passing
+      - name: source_play_by_play
+      - name: source_player_stats
+      - name: source_roster
+      - name: source_snap_counts
+      - name: source_officials
+      - name: source_pbp_participation
+      - name: source_players
+      - name: source_roster_weekly
