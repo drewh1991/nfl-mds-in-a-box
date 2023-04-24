@@ -1,5 +1,5 @@
-WITH source as (
-    SELECT * FROM {{ source('nfldata','source_roster_weekly') }}
+WITH source AS (
+    SELECT * FROM {{ source('nfldata', 'source_roster') }}
 )
 
 SELECT
@@ -38,5 +38,5 @@ SELECT
     entry_year,
     rookie_year,
     draft_club,
-    draft_number,
+    draft_number
 FROM source
