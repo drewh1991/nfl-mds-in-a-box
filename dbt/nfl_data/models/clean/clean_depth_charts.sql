@@ -1,7 +1,3 @@
-{{
-    
-}}
-
 WITH source AS (
     SELECT * FROM {{ source('nfldata', 'source_depth_charts') }}
 )
