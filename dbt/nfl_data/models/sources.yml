@@ -3,6 +3,7 @@ version: 2
 sources:
   - name: nfldata
     database: nfldata
+    schema: main
     tables:
       - name: source_depth_charts
       - name: source_injuries
