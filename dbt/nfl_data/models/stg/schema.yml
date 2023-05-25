@@ -1,0 +1,49 @@
+version: 2
+
+models:
+  - name: stg_dim_players
+    columns:
+      - name: player_key
+        tests:
+          - unique
+          - not_null
+      - name: esb_id
+      - name: espn_id
+      - name: fantasy_data_id
+      - name: gsis_it_id
+      - name: pff_id
+      - name: pfr_id
+      - name: rotowire_id
+      - name: sleeper_id
+      - name: sportradar_id
+      - name: yahoo_id
+      - name: first_name
+      - name: last_name
+      - name: full_name
+      - name: display_name
+      - name: status
+      - name: position_group
+      - name: position
+      - name: suffix
+      - name: birth_date
+      - name: college_name
+      - name: jersey_number
+      - name: height
+      - name: weight
+      - name: team_abbr
+      - name: team_seq
+      - name: current_team_id
+      - name: football_name
+      - name: entry_year
+      - name: rookie_year
+      - name: draft_club
+      - name: college_conference
+      - name: status_description_abbr
+      - name: status_short_description
+      - name: short_name
+      - name: smart_id
+      - name: headshot
+      - name: draft_number
+      - name: uniform_number
+      - name: draft_round
+      - name: season
