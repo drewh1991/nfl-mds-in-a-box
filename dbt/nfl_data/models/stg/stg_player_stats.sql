@@ -1,0 +1,136 @@
+{{
+    config(
+        materialized='table'
+    )
+}}
+
+WITH player_stats AS (
+    SELECT * FROM {{ ref('clean_player_stats') }}
+),
+
+snap_counts AS (
+    SELECT * FROM {{ ref('stg_snap_counts') }}
+),
+
+combined AS (
+    SELECT
+        COALESCE(player_stats.player_key, snap_counts.player_key) as player_key,
+        COALESCE(player_stats.season, snap_counts.season) as season,
+        COALESCE(player_stats.week, snap_counts.week) as week,
+        COALESCE(player_stats.team, snap_counts.team) as team,
+        opponent,
+        COALESCE(player_stats.position_played, snap_counts.position_played) as position_played,
+
+        offense_snaps,
+        offense_pct,
+        defense_snaps,
+        defense_pct,
+        special_teams_snaps,
+        special_teams_pct,
+        completions,
+        attempts,
+        passing_yards,
+        passing_tds,
+        interceptions,
+        sacks,
+        sack_yards,
+        sack_fumbles,
+        sack_fumbles_lost,
+        passing_air_yards,
+        passing_yards_after_catch,
+        passing_first_downs,
+        passing_epa,
+        passing_2pt_conversions,
+        pacr,
+        dakota,
+        carries,
+        rushing_yards,
+        rushing_tds,
+        rushing_fumbles,
+        rushing_fumbles_lost,
+        rushing_first_downs,
+        rushing_epa,
+        rushing_2pt_conversions,
+        receptions,
+        targets,
+        receiving_yards,
+        receiving_tds,
+        receiving_fumbles,
+        receiving_fumbles_lost,
+        receiving_air_yards,
+        receiving_yards_after_catch,
+        receiving_first_downs,
+        receiving_epa,
+        receiving_2pt_conversions,
+        racr,
+        target_share,
+        air_yards_share,
+        wopr,
+        special_teams_tds,
+        fantasy_points,
+        fantasy_points_ppr
+
+    FROM player_stats
+    FULL OUTER JOIN snap_counts USING (
+        player_key,
+        season,
+        week
+    )
+)
+
+SELECT
+        player_key,
+        season,
+        week,
+        team,
+        opponent,
+        position_played,
+        offense_snaps,
+        offense_pct,
+        defense_snaps,
+        defense_pct,
+        special_teams_snaps,
+        special_teams_pct,
+        completions,
+        attempts,
+        passing_yards,
+        passing_tds,
+        interceptions,
+        sacks,
+        sack_yards,
+        sack_fumbles,
+        sack_fumbles_lost,
+        passing_air_yards,
+        passing_yards_after_catch,
+        passing_first_downs,
+        passing_epa,
+        passing_2pt_conversions,
+        pacr,
+        dakota,
+        carries,
+        rushing_yards,
+        rushing_tds,
+        rushing_fumbles,
+        rushing_fumbles_lost,
+        rushing_first_downs,
+        rushing_epa,
+        rushing_2pt_conversions,
+        receptions,
+        targets,
+        receiving_yards,
+        receiving_tds,
+        receiving_fumbles,
+        receiving_fumbles_lost,
+        receiving_air_yards,
+        receiving_yards_after_catch,
+        receiving_first_downs,
+        receiving_epa,
+        receiving_2pt_conversions,
+        racr,
+        target_share,
+        air_yards_share,
+        wopr,
+        special_teams_tds,
+        fantasy_points,
+        fantasy_points_ppr
+FROM combined

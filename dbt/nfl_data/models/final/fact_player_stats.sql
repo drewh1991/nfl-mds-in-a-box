@@ -5,19 +5,25 @@
 }}
 
 WITH source AS (
-    SELECT * FROM {{ source('nfldata', 'source_player_stats') }}
+    SELECT * FROM {{ ref('stg_player_stats') }}
 )
 
 SELECT
-    player_id as player_key,
-    player_display_name as player_name,
-    position as position_played,
-    position_group,
-    headshot_url,
-    recent_team as team,
+    {{ dbt_utils.generate_surrogate_key(['player_key', 'season', 'week']) }} as player_stats_week_id,
+
+    player_key,
     season,
     week,
-    season_type,
+    
+    team,
+    opponent,
+    position_played,
+    offense_snaps,
+    offense_pct,
+    defense_snaps,
+    defense_pct,
+    special_teams_snaps,
+    special_teams_pct,
     completions,
     attempts,
     passing_yards,

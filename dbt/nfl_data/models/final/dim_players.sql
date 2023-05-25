@@ -5,22 +5,32 @@
 }}
 
 WITH source AS (
-    SELECT * FROM {{ source('nfldata', 'source_players') }}
+    SELECT * FROM {{ ref('stg_dim_players') }}
 )
 
 SELECT
-    status,
-    display_name,
+    player_key,
+    esb_id,
+    espn_id,
+    fantasy_data_id,
+    gsis_it_id,
+    pff_id,
+    pfr_id,
+    rotowire_id,
+    sleeper_id,
+    sportradar_id,
+    yahoo_id,
     first_name,
     last_name,
-    display_name as player_name,
-    esb_id,
-    gsis_id as player_key,
+    full_name,
+    display_name,
+    player_name,
+    status,
+    position_group,
+    position,
     suffix,
     birth_date,
     college_name,
-    position_group,
-    position,
     jersey_number,
     height,
     weight,
@@ -34,7 +44,6 @@ SELECT
     college_conference,
     status_description_abbr,
     status_short_description,
-    gsis_it_id,
     short_name,
     smart_id,
     headshot,
