@@ -1,3 +1,9 @@
+{{
+    config(
+        materialized='table'
+    )
+}}
+
 WITH source as (
     SELECT * FROM {{ source('nfldata','source_roster_weekly') }}
 )
@@ -16,7 +22,7 @@ SELECT
     height,
     weight,
     college,
-    gsis_id,
+    gsis_id as player_key,
     espn_id,
     sportradar_id,
     yahoo_id,

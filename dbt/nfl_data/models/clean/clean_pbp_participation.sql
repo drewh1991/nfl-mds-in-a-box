@@ -1,3 +1,9 @@
+{{
+    config(
+        materialized='table'
+    )
+}}
+
 WITH source AS (
     SELECT * FROM {{ source('nfldata', 'source_pbp_participation') }}
 )

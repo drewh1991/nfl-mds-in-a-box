@@ -1,3 +1,9 @@
+{{
+    config(
+        materialized='table'
+    )
+}}
+
 WITH source AS (
     SELECT * FROM {{ source('nfldata', 'source_players') }}
 )
@@ -7,8 +13,9 @@ SELECT
     display_name,
     first_name,
     last_name,
+    display_name as player_name,
     esb_id,
-    gsis_id,
+    gsis_id as player_key,
     suffix,
     birth_date,
     college_name,

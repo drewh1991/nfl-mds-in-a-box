@@ -1,3 +1,9 @@
+{{
+    config(
+        materialized='table'
+    )
+}}
+
 WITH source AS (
     SELECT * FROM {{ source('nfldata', 'source_depth_charts') }}
 )
@@ -12,7 +18,7 @@ SELECT
     first_name,
     football_name,
     formation,
-    gsis_id,
+    gsis_id as player_key,
     jersey_number,
     position,
     elias_id,

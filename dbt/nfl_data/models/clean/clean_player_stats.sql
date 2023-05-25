@@ -1,15 +1,20 @@
+{{
+    config(
+        materialized='table'
+    )
+}}
+
 WITH source AS (
     SELECT * FROM {{ source('nfldata', 'source_player_stats') }}
 )
 
 SELECT
-    player_id,
-    player_name,
-    player_display_name,
-    position,
+    player_id as player_key,
+    player_display_name as player_name,
+    position as position_played,
     position_group,
     headshot_url,
-    recent_team,
+    recent_team as team,
     season,
     week,
     season_type,

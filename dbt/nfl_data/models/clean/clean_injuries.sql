@@ -1,3 +1,9 @@
+{{
+    config(
+        materialized='table'
+    )
+}}
+
 WITH source AS (
     SELECT * FROM {{ source('nfldata', 'source_injuries') }}
 )
@@ -7,7 +13,7 @@ SELECT
     game_type,
     team,
     week,
-    gsis_id,
+    gsis_id as player_key,
     position,
     full_name,
     first_name,

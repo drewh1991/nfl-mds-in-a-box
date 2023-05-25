@@ -1,3 +1,9 @@
+{{
+    config(
+        materialized='table'
+    )
+}}
+
 WITH source AS (
     SELECT * FROM {{ source('nfldata', 'source_officials') }}
 )
@@ -6,7 +12,7 @@ SELECT
     game_id,
     game_key,
     official_name,
-    position,
+    position as official_position,
     jersey_number,
     official_id,
     season,
