@@ -38,3 +38,7 @@ models:
       +materialized: table
     stg:
       +materialized: view
+
+vars:
+  dbt_utils:
+    surrogate_key_treat_nulls_as_empty_strings: True
