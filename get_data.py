@@ -45,7 +45,7 @@ def get_report(report_name, file_url):
             f"""
             CREATE OR REPLACE TABLE source_{report_name} AS
             SELECT *
-            FROM read_parquet('{file_url}') LIMIT 1
+            FROM read_parquet('{file_url}')
             """
         )
     except duckdb.IOException as fileErr:
