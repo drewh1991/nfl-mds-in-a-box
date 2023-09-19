@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 import duckdb
 import logging
 import os
+import datetime
 
 load_dotenv()
 
@@ -15,7 +16,17 @@ logging.basicConfig(
   encoding='utf-8', 
   datefmt='%Y-%m-%d %H:%M:%S')
 
-year = '2022'
+todays_date = datetime.date.today()
+
+current_month = todays_date.month
+
+current_year = todays_date.year
+
+# The next nfl season starts in September
+if 9 <= current_month <= 12:
+    year = current_year
+else:
+    year = current_year - 1
 
 reports = {
    'depth_charts': f'https://github.com/nflverse/nflverse-data/releases/download/depth_charts/depth_charts_{year}.parquet',
@@ -45,7 +56,7 @@ def get_report(report_name, file_url):
             f"""
             CREATE OR REPLACE TABLE source_{report_name} AS
             SELECT *
-            FROM read_parquet('{file_url}')
+            FROM read_parquet('{file_url}') LIMIT 1
             """
         )
     except duckdb.IOException as fileErr:
